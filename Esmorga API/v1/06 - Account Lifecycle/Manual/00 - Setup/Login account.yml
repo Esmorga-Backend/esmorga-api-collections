@@ -1,0 +1,135 @@
+info:
+  name: Login account
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/account/login"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+          "email": "{{user}}",
+          "password": "{{password}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const jsonData = res.getBody();
+
+        bru.setEnvVar("accessToken", jsonData.accessToken);
+        bru.setEnvVar("refreshToken", jsonData.refreshToken);
+        bru.setEnvVar(
+          "userFullName",
+          `${jsonData.profile.name} ${jsonData.profile.lastName}`
+        );
+    - type: tests
+      code: |-
+        test("Status code is 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Access token is returned", function () {
+          const body = res.getBody();
+
+          expect(body.accessToken).to.be.a("string");
+          expect(body.accessToken).to.not.be.empty;
+        });
+
+        test("Refresh token is returned", function () {
+          const body = res.getBody();
+
+          expect(body.refreshToken).to.be.a("string");
+          expect(body.refreshToken).to.not.be.empty;
+        });
+
+        test("TTL is 600", function () {
+          const body = res.getBody();
+
+          expect(body.ttl).to.equal(600);
+        });
+
+        test("Profile has expected data", function () {
+          const body = res.getBody();
+
+          expect(body.profile).to.have.property("name");
+          expect(body.profile).to.have.property("lastName");
+          expect(body.profile).to.have.property("email");
+          expect(body.profile).to.have.property("role");
+        });
+
+        test("Logged user has USER role", function () {
+          const body = res.getBody();
+
+          expect(body.profile.role).to.equal("USER");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: QA login
+    request:
+      url: "{{port}}{{host}}/v1/account/login"
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+              "email": "esmorgaqa8@yopmail.com",
+              "password": "Mobgen!1"
+          }
+    response:
+      body:
+        type: text
+        data: ""
+  - name: PROD login
+    request:
+      url: "{{port}}{{host}}/v1/account/login"
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+              "email": "esmorga15101@yopmail.com",
+              "password": "Mobgen!1"
+          }
+    response:
+      body:
+        type: text
+        data: ""
+  - name: Local login
+    request:
+      url: "{{port}}{{host}}/v1/account/login"
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+              "email": "testdelete@yopmail.com",
+              "password": "Mobgen1!"
+          }
+    response:
+      body:
+        type: text
+        data: ""

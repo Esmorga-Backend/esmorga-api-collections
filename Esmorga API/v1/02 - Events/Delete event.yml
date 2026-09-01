@@ -1,0 +1,67 @@
+info:
+  name: Delete event
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{baseUrl}}/v1/events"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  body:
+    type: json
+    data: |-
+      {
+          "eventId": "{{eventId}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+        const role = bru.getEnvVar("userRole");
+
+        if (role === "ADMIN") {
+
+          test("Status code is 204 for ADMIN", function () {
+            expect(res.getStatus()).to.equal(204);
+          });
+
+        } else if (role === "USER") {
+
+          test("Status code is 403 for USER", function () {
+            expect(res.getStatus()).to.equal(403);
+          });
+
+          test("Response indicates unauthorized request", function () {
+            expect(body.title).to.equal("unauthorizedRequestError");
+          });
+
+          test("Response detail is not authorized", function () {
+            expect(body.detail).to.equal("not authorized");
+          });
+
+          test("Response contains privilege error", function () {
+            expect(body.errors).to.be.an("array");
+            expect(body.errors).to.include("not enough privileges");
+          });
+
+        } else {
+
+          test("Logged user role is supported", function () {
+            expect(["USER", "ADMIN"]).to.include(role);
+          });
+
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

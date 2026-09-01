@@ -1,0 +1,69 @@
+info:
+  name: Login Admin Helper
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/account/login"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+          "email": "{{userAdmin}}",
+          "password": "{{passwordAdmin}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        bru.setEnvVar("adminAccessToken", body.accessToken);
+        bru.setEnvVar("adminRefreshToken", body.refreshToken);
+    - type: tests
+      code: |-
+        test("Status code is 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Access token is returned", function () {
+          const body = res.getBody();
+
+          expect(body.accessToken).to.be.a("string");
+          expect(body.accessToken).to.not.be.empty;
+        });
+
+        test("Refresh token is returned", function () {
+          const body = res.getBody();
+
+          expect(body.refreshToken).to.be.a("string");
+          expect(body.refreshToken).to.not.be.empty;
+        });
+
+        test("TTL is 600", function () {
+          const body = res.getBody();
+
+          expect(body.ttl).to.equal(600);
+        });
+
+        test("Profile has expected data", function () {
+          const body = res.getBody();
+
+          expect(body.profile).to.have.property("name");
+          expect(body.profile).to.have.property("lastName");
+          expect(body.profile).to.have.property("email");
+          expect(body.profile).to.have.property("role");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

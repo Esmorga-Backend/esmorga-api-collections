@@ -1,0 +1,110 @@
+info:
+  name: GET All Users
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/v1/users?page=1&limit=2&sortBy=lastName&order=desc"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  params:
+    - name: page
+      value: "1"
+      type: query
+    - name: limit
+      value: "2"
+      type: query
+    - name: sortBy
+      value: lastName
+      type: query
+    - name: order
+      value: desc
+      type: query
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+        const role = bru.getEnvVar("userRole");
+
+        if (role === "USER") {
+
+          test("Status code is 403 for USER", function () {
+            expect(res.getStatus()).to.equal(403);
+          });
+
+          test("Response indicates unauthorized request", function () {
+            expect(body.title).to.equal("unauthorizedRequestError");
+          });
+
+          test("Response detail is not authorized", function () {
+            expect(body.detail).to.equal("not authorized");
+          });
+
+          test("Response contains privilege error", function () {
+            expect(body.errors).to.be.an("array");
+            expect(body.errors).to.include("not enough privileges");
+          });
+
+        } else if (role === "ADMIN") {
+
+          test("Status code is 200 for ADMIN", function () {
+            expect(res.getStatus()).to.equal(200);
+          });
+
+          test("Response contains users array", function () {
+            expect(body).to.have.property("users");
+            expect(body.users).to.be.an("array");
+          });
+
+          test("Each user contains required fields", function () {
+            body.users.forEach(user => {
+              expect(user).to.have.property("id");
+              expect(user).to.have.property("name");
+              expect(user).to.have.property("lastName");
+              expect(user).to.have.property("email");
+              expect(user).to.have.property("role");
+            });
+          });
+
+          test("Pagination metadata is correct", function () {
+            expect(body).to.have.property("meta");
+
+            expect(body.meta.currentPage).to.equal(1);
+            expect(body.meta.itemsPerPage).to.equal(2);
+            expect(body.meta.totalItems).to.be.a("number");
+            expect(body.meta.totalPages).to.be.a("number");
+          });
+
+          test("Returned users do not exceed requested limit", function () {
+            expect(body.users.length).to.be.at.most(2);
+          });
+
+          test("Total pages matches pagination data", function () {
+            const expectedTotalPages = Math.ceil(
+              body.meta.totalItems / body.meta.itemsPerPage
+            );
+
+            expect(body.meta.totalPages).to.equal(expectedTotalPages);
+          });
+
+        } else {
+
+          test("Logged user role is supported", function () {
+            expect(["USER", "ADMIN"]).to.include(role);
+          });
+
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

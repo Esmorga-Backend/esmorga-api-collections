@@ -1,0 +1,49 @@
+info:
+  name: Get Profile
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{baseUrl}}/v1/account/profile"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+
+        const role = bru.getEnvVar("userRole");
+        const expectedEmail = bru.getEnvVar("loggedUserEmail");
+
+        test("Status code is 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Profile contains required fields", function () {
+          expect(body).to.have.property("name");
+          expect(body).to.have.property("lastName");
+          expect(body).to.have.property("email");
+          expect(body).to.have.property("role");
+        });
+
+        test("Profile belongs to logged user", function () {
+          expect(body.email).to.equal(expectedEmail);
+        });
+
+        test("User has expected role", function () {
+          expect(body.role).to.equal(role);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

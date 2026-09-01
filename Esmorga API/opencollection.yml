@@ -1,0 +1,22 @@
+opencollection: 1.0.0
+
+info:
+  name: Esmorga API
+
+request:
+  variables:
+    - name: baseUrl
+      value: http://localhost:3000
+
+docs:
+  content: |-
+    [Swagger in JSON format](http://localhost:3000/swagger-json)
+
+     Swagger for Esmorga API.
+  type: text/markdown
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git

@@ -1,0 +1,77 @@
+info:
+  name: Login account Admin
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/account/login"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+          "email": "{{userAdmin}}",
+          "password": "{{passwordAdmin}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const jsonData = res.getBody();
+
+        bru.setEnvVar("adminAccessToken", jsonData.accessToken);
+        bru.setEnvVar("adminRefreshToken", jsonData.refreshToken);
+        bru.setEnvVar(
+          "userFullName_admin",
+          `${jsonData.profile.name} ${jsonData.profile.lastName}`
+        );
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
+
+examples:
+  - name: QA Admin login
+    request:
+      url: "{{port}}{{host}}/v1/account/login"
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+              "email": "esmorga.test.05@yopmail.com",
+              "password": "Password!5"
+          }
+    response:
+      body:
+        type: text
+        data: ""
+  - name: PROD Admin login
+    request:
+      url: "{{port}}{{host}}/v1/account/login"
+      method: POST
+      headers:
+        - name: Content-Type
+          value: application/json
+      body:
+        type: json
+        data: |-
+          {
+              "email": "corunamobilemakers@gmail.com",
+              "password": "Mobgen123!"
+          }
+    response:
+      body:
+        type: text
+        data: ""

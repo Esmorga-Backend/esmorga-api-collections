@@ -1,0 +1,92 @@
+info:
+  name: Update event
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/v1/events"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  body:
+    type: json
+    data: |-
+      {
+          "eventId": "{{eventId}}",
+          "eventName": "Event with no max capacity set"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+        const role = bru.getEnvVar("userRole");
+
+        if (role === "ADMIN") {
+
+          test("Status code is 200 for ADMIN", function () {
+            expect(res.getStatus()).to.equal(200);
+          });
+
+          test("Response contains eventId", function () {
+            expect(body).to.have.property("eventId");
+            expect(body.eventId).to.be.a("string");
+            expect(body.eventId).to.not.be.empty;
+          });
+
+          test("Event contains required fields", function () {
+            expect(body).to.have.property("eventName");
+            expect(body).to.have.property("eventDate");
+            expect(body).to.have.property("description");
+            expect(body).to.have.property("eventType");
+            expect(body).to.have.property("location");
+            expect(body).to.have.property("joinDeadline");
+            expect(body).to.have.property("currentAttendeeCount");
+          });
+
+          test("Current attendee count is a number", function () {
+            expect(body.currentAttendeeCount).to.be.a("number");
+          });
+
+          test("Location contains name", function () {
+            expect(body.location).to.have.property("name");
+          });
+
+        } else if (role === "USER") {
+
+          test("Status code is 403 for USER", function () {
+            expect(res.getStatus()).to.equal(403);
+          });
+
+          test("Response indicates unauthorized request", function () {
+            expect(body.title).to.equal("unauthorizedRequestError");
+          });
+
+          test("Response detail is not authorized", function () {
+            expect(body.detail).to.equal("not authorized");
+          });
+
+          test("Response contains privilege error", function () {
+            expect(body.errors).to.be.an("array");
+            expect(body.errors).to.include("not enough privileges");
+          });
+
+        } else {
+
+          test("Logged user role is supported", function () {
+            expect(["USER", "ADMIN"]).to.include(role);
+          });
+
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

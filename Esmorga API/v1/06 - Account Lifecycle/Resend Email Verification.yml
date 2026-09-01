@@ -1,0 +1,35 @@
+info:
+  name: Resend Email Verification
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/account/email/verification"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+          "email": "test-email-verification@yopmail.com"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+
+        test("Status code is 204", function () {
+          expect(res.getStatus()).to.equal(204);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

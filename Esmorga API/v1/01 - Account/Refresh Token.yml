@@ -1,0 +1,55 @@
+info:
+  name: Refresh Token
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/account/refresh"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+          "refreshToken": "{{refreshToken}}"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const jsonData = res.getBody();
+
+        bru.setEnvVar("accessToken", jsonData.accessToken);
+        bru.setEnvVar("refreshToken", jsonData.refreshToken);
+    - type: tests
+      code: |-
+        const body = res.getBody();
+
+        test("Status code is 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("New access token is returned", function () {
+          expect(body.accessToken).to.be.a("string");
+          expect(body.accessToken).to.not.be.empty;
+        });
+
+        test("New refresh token is returned", function () {
+          expect(body.refreshToken).to.be.a("string");
+          expect(body.refreshToken).to.not.be.empty;
+        });
+
+        test("TTL is 600", function () {
+          expect(body.ttl).to.equal(600);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

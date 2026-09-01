@@ -1,0 +1,75 @@
+info:
+  name: Get Created events
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/v1/account/events/created"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+        const role = bru.getEnvVar("userRole");
+
+        if (role === "USER") {
+
+          test("Status code is 403 for USER", function () {
+            expect(res.getStatus()).to.equal(403);
+          });
+
+          test("Response indicates unauthorized request", function () {
+            expect(body.title).to.equal("unauthorizedRequestError");
+          });
+
+          test("Response detail is not authorized", function () {
+            expect(body.detail).to.equal("not authorized");
+          });
+
+          test("Response contains privilege error", function () {
+            expect(body.errors).to.be.an("array");
+            expect(body.errors).to.include("not enough privileges");
+          });
+
+        } else if (role === "ADMIN") {
+
+          test("Status code is 200 for ADMIN", function () {
+            expect(res.getStatus()).to.equal(200);
+          });
+
+          test("Response contains totalEvents", function () {
+            expect(body).to.have.property("totalEvents");
+            expect(body.totalEvents).to.be.a("number");
+          });
+
+          test("Response contains events array", function () {
+            expect(body).to.have.property("events");
+            expect(body.events).to.be.an("array");
+          });
+
+          test("Total events matches events array length", function () {
+            expect(body.totalEvents).to.equal(body.events.length);
+          });
+
+        } else {
+
+          test("Logged user role is supported", function () {
+            expect(["USER", "ADMIN"]).to.include(role);
+          });
+
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

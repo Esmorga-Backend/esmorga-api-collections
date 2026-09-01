@@ -1,0 +1,7 @@
+info:
+  name: 03 - Event Participation
+  type: folder
+  seq: 4
+
+request:
+  auth: inherit

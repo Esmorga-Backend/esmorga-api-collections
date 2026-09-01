@@ -1,0 +1,84 @@
+info:
+  name: Get Polls
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/v1/polls"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (body.polls.length > 0) {
+          const poll = body.polls[0];
+
+          bru.setEnvVar("pollId", poll.pollId);
+
+          poll.options.forEach((option, index) => {
+            bru.setEnvVar(`optionId${index + 1}`, option.optionId);
+          });
+        }
+    - type: tests
+      code: |-
+        const body = res.getBody();
+
+        test("Status code is 200", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
+
+        test("Response contains polls array", function () {
+          expect(body).to.have.property("polls");
+          expect(body.polls).to.be.an("array");
+        });
+
+        test("Total polls matches polls array length", function () {
+          expect(body.totalPolls).to.equal(body.polls.length);
+        });
+
+        test("Each poll contains required fields", function () {
+          body.polls.forEach(poll => {
+            expect(poll).to.have.property("pollId");
+            expect(poll).to.have.property("pollName");
+            expect(poll).to.have.property("description");
+            expect(poll).to.have.property("options");
+            expect(poll).to.have.property("voteDeadline");
+            expect(poll).to.have.property("isMultipleChoice");
+            expect(poll).to.have.property("userSelectedOptions");
+          });
+        });
+
+        test("Each poll contains valid options", function () {
+          body.polls.forEach(poll => {
+            expect(poll.options).to.be.an("array");
+
+            poll.options.forEach(option => {
+              expect(option).to.have.property("optionId");
+              expect(option).to.have.property("option");
+              expect(option).to.have.property("voteCount");
+              expect(option.voteCount).to.be.a("number");
+            });
+          });
+        });
+
+        test("User selected options is an array", function () {
+          body.polls.forEach(poll => {
+            expect(poll.userSelectedOptions).to.be.an("array");
+          });
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

@@ -1,0 +1,38 @@
+info:
+  name: Register account
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/account/register"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+          "name": "Test",
+          "lastName": "User",
+          "password": "Mobgen1!",
+          "email": "testdelete1@yopmail.com"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        const body = res.getBody();
+
+        test("Status code is 201", function () {
+          expect(res.getStatus()).to.equal(201);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
