@@ -57,9 +57,13 @@ For these scenarios, an Admin Helper account is used to prepare the required tes
 1. Open the `Esmorga API` collection in Bruno.
 2. Select the required environment (`LOCAL`, `QA` or `PROD`).
 3. Select the Global Environment containing the credentials for the user to test.
-4. Run the collection.
+4. Select the `v1` folder.
+5. Click `Run`.
+6. In the Collection Runner:
+   - Set `manual` in **Exclude tags**.
+   - Select **Recursive Run** to execute all requests inside `v1` and its subfolders.
 
-Requests tagged as `manual` are intended for manual execution and should be excluded from automated collection runs.
+Requests tagged as `manual` are excluded from the automated collection run because they require manual interaction or specific account lifecycle conditions.
 
 ## Automation
 
