@@ -54,3 +54,6 @@ variables:
   - name: adminRefreshToken
     value: ""
     description: ""
+  - name: password_delete_account
+    value: SuperSecret1!
+    description: ""

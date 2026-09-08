@@ -10,7 +10,7 @@ http:
     - name: Content-Type
       value: application/json
     - name: Authorization
-      value: Bearer {{adminAccessToken}}
+      value: Bearer {{accessToken}}
   body:
     type: json
     data: |-
@@ -19,13 +19,18 @@ http:
           "eventDate": "{{eventDate}}",
           "description": "Test the currentAttendeeCount",
           "eventType": "Party",
+          "imageUrl": "image.url",
           "location": {
               "lat": 43.37041273508349,
               "long": -8.400401990375894,
               "name": "Malos Hábitos"
           },
           "joinDeadline": "{{joinDeadline}}",
-          "maxCapacity":12
+          "maxCapacity":12,
+          "tags": [
+          "Dance",
+          "Music"
+          ]
       }
   auth: inherit
 

@@ -17,6 +17,7 @@ http:
       {
           "pollName": "Test poll delete multiple",
           "description": "Testing poll",
+          "imageUrl": "image.url",
           "options": [
               "opcion 1","opcion 2","opcion 3","opcion 4"
           ],

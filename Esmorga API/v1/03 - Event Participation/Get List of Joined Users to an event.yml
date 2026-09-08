@@ -5,12 +5,16 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/v1/events/{{eventId}}/users"
+  url: "{{baseUrl}}/v1/events/:eventId/users"
   headers:
     - name: Content-Type
       value: application/json
     - name: Authorization
       value: Bearer {{accessToken}}
+  params:
+    - name: eventId
+      value: "{{eventId}}"
+      type: path
   auth: inherit
 
 runtime:

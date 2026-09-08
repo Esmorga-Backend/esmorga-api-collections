@@ -5,12 +5,16 @@ info:
 
 http:
   method: POST
-  url: "{{baseUrl}}/v1/polls/{{pollId}}/vote"
+  url: "{{baseUrl}}/v1/polls/:pollId/vote"
   headers:
     - name: Content-Type
       value: application/json
     - name: Authorization
       value: Bearer {{accessToken}}
+  params:
+    - name: pollId
+      value: "{{pollId}}"
+      type: path
   body:
     type: json
     data: |-

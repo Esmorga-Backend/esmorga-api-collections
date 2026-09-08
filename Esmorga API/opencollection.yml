@@ -2,6 +2,17 @@ opencollection: 1.0.0
 
 info:
   name: Esmorga API
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
 
 request:
   variables:
@@ -20,3 +31,10 @@ extensions:
     ignore:
       - node_modules
       - .git
+    openapi:
+      - sourceUrl: https://qa.api.esmorgaevents.com/swagger-json
+        groupBy: tags
+        lastSyncDate: 2026-09-07T10:55:21.598Z
+        specHash: ff55d4293050e57d0381a0efcecff98d
+        autoCheck: true
+        autoCheckInterval: 5

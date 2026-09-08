@@ -5,7 +5,11 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/v1/events"
+  url: "{{baseUrl}}/v1/events?Content-Type=application/json"
+  params:
+    - name: Content-Type
+      value: application/json
+      type: query
   auth: inherit
 
 runtime:

@@ -9,8 +9,6 @@ http:
   headers:
     - name: Content-Type
       value: application/json
-    - name: Authorization
-      value: Bearer {{adminAccessToken}}
   body:
     type: json
     data: |-
@@ -27,7 +25,9 @@ http:
           "joinDeadline": "{{joinDeadline}}",
           "maxCapacity":12
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: "{{adminAccessToken}}"
 
 runtime:
   scripts:

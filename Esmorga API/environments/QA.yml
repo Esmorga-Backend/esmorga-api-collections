@@ -2,55 +2,43 @@ name: QA
 variables:
   - name: baseUrl
     value: https://qa.api.esmorgaevents.com
-    description: ""
   - name: userAdmin
     value: "{{user_admin}}"
-    description: ""
   - name: passwordAdmin
     value: "{{password_admin}}"
-    description: ""
   - name: eventId
-    value: ""
-    description: ""
+    value: 6a96bc96f623786cfe194413
   - name: eventDate
     value: 2028-09-26T16:00:00.000Z
-    description: ""
   - name: joinDeadline
     value: 2026-09-26T16:00:00.000Z
-    description: ""
   - name: voteDeadline
     value: 2026-09-26T16:00:00.000Z
-    description: ""
   - name: pollId
     value: ""
-    description: ""
   - name: optionId1
     value: ""
-    description: ""
   - name: optionId2
     value: ""
-    description: ""
   - name: optionId3
     value: ""
-    description: ""
   - name: optionId4
     value: ""
-    description: ""
   - name: userFullName
-    value: ""
-    description: ""
+    value: Scottie Pippen
   - name: userFullName_admin
-    value: ""
-    description: ""
+    value: Magico Gonzalez
   - name: userRole
-    value: ""
-    description: ""
+    value: USER
   - name: loggedUserEmail
-    value: ""
-    description: ""
+    value: esmorga.test.03@yopmail.com
   - name: adminAccessToken
-    value: ""
-    description: ""
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FiIiwic2Vzc2lvbklkIjoiYTdlNDBkYTItMDA3YS00NWNmLTkwMDctYjM1YmY0ODBkNjNkIiwiaWF0IjoxNzg4NDI4Mzg0LCJleHAiOjE3ODg0Mjg5ODR9.iFYq3800H7cEfQOefNJWbejQNiIryu53wUT_CN5AszM
   - name: adminRefreshToken
-    value: ""
-    description: ""
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FiIiwic2Vzc2lvbklkIjoiYTdlNDBkYTItMDA3YS00NWNmLTkwMDctYjM1YmY0ODBkNjNkIiwiaWQiOiJlMmE2NDAwOC1iZWE1LTQ4M2YtYjgzNS0zNzBlNGY3ZDA4MGQiLCJpYXQiOjE3ODg0MjgzODR9.w14p9NngyXwViGiyVUS2SLkAdLYa6YIsfaW8lRMBouE
+  - name: password_delete_account
+    value: SuperSecret1!
+  - name: accessToken
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FkIiwic2Vzc2lvbklkIjoiY2Y1YWRhZTUtZmIwMy00ZWQ3LTlkZDAtOTYxN2ZmNTE3MWU1IiwiaWF0IjoxNzg4NDI4MjY4LCJleHAiOjE3ODg0Mjg4Njh9.HprrFo_qTdkGQopyMuY7laAfgp46GFJYpLB6E5fKq10
+  - name: refreshToken
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FkIiwic2Vzc2lvbklkIjoiY2Y1YWRhZTUtZmIwMy00ZWQ3LTlkZDAtOTYxN2ZmNTE3MWU1IiwiaWQiOiIzNjk1MjA4NC1jNzQ0LTQ5MTEtYmQ5My1hMWFmYmY4YWRjOTUiLCJpYXQiOjE3ODg0MjgyNjh9.H-06j1nie-824KxKbecAhd_Txt0xaV919FQ-1lcwe6Y
