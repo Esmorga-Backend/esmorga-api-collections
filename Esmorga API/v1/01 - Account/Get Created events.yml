@@ -11,7 +11,10 @@ http:
       value: application/json
     - name: Authorization
       value: Bearer {{accessToken}}
-  auth: inherit
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{accessToken}}"
 
 runtime:
   scripts:

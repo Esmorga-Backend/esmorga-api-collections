@@ -15,8 +15,23 @@ http:
     type: json
     data: |-
       {
-          "eventId": "{{eventId}}",
-          "eventName": "Event with no max capacity set"
+        "eventId": "{{eventId}}",
+        "eventName": "Event with no max capacity set",
+        "eventDate": "3000-03-08T10:05:30.915Z",
+        "description": "Join us for an unforgettable celebration as we dance into the apocalypse.",
+        "eventType": "Party",
+        "imageUrl": "image.url",
+        "location": {
+          "name": "A Coruña",
+          "lat": 43.35525182148881,
+          "long": -8.41937931298951
+        },
+        "tags": [
+          "Dance",
+          "Music"
+        ],
+        "joinDeadline": "3000-02-27T10:05:30.915Z",
+        "maxCapacity": 50
       }
   auth: inherit
 

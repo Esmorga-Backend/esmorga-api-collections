@@ -17,8 +17,9 @@ http:
     type: json
     data: |-
       {
-          "password": "Mobgen1!"
+          "password": "{{password_delete_account}}"
       }
+  auth: inherit
 
 settings:
   encodeUrl: true

@@ -60,3 +60,6 @@ variables:
   - name: refreshToken
     value: ..VSdvCcBdTxG_l7B-VtQd50ZPxiT3kCBXmk61IvAZHgI
     description: ""
+  - name: password_delete_account
+    value: SuperSecret1!
+    description: ""
