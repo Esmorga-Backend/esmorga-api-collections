@@ -1,0 +1,34 @@
+info:
+  name: Create Poll
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/v1/polls"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{adminAccessToken}}
+  body:
+    type: json
+    data: |-
+      {
+          "pollName": "Test poll delete multiple",
+          "description": "Testing poll",
+          "imageUrl": "image.url",
+          "options": [
+              "opcion 1","opcion 2","opcion 3","opcion 4"
+          ],
+          "voteDeadline": "{{voteDeadline}}",
+          "isMultipleChoice": true
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
