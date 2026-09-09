@@ -1,0 +1,141 @@
+{
+  "info": {
+    "type": "bruno-environment",
+    "exportedAt": "2026-09-09T10:22:16.717Z",
+    "exportedUsing": "Bruno/v4.1.0"
+  },
+  "environments": [
+    {
+      "name": "PROD - Admin",
+      "variables": [
+        {
+          "name": "user",
+          "value": "cmmadmin@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password",
+          "value": "Mobgen123!",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "user_admin",
+          "value": "cmmadmin@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password_admin",
+          "value": "Mobgen123!",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        }
+      ]
+    },
+    {
+      "name": "PROD - User",
+      "variables": [
+        {
+          "name": "user",
+          "value": "corunamobilemakers@gmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password",
+          "value": "Mobgen123!",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "user_admin",
+          "value": "cmmadmin@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password_admin",
+          "value": "Mobgen123!",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        }
+      ]
+    },
+    {
+      "name": "QA - Admin",
+      "variables": [
+        {
+          "name": "user",
+          "value": "esmorga.test.01@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password",
+          "value": "Password!1",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "user_admin",
+          "value": "esmorga.test.01@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password_admin",
+          "value": "Password!1",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        }
+      ]
+    },
+    {
+      "name": "QA - User",
+      "variables": [
+        {
+          "name": "user",
+          "value": "esmorga.test.03@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password",
+          "value": "Password!3",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "user_admin",
+          "value": "esmorga.test.01@yopmail.com",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        },
+        {
+          "name": "password_admin",
+          "value": "Password!1",
+          "type": "text",
+          "enabled": true,
+          "secret": false
+        }
+      ]
+    }
+  ]
+}
