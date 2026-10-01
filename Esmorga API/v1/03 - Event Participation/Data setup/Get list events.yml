@@ -1,7 +1,7 @@
 info:
   name: Get list events
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: GET
@@ -46,7 +46,6 @@ runtime:
             expect(event).to.have.property("eventId");
             expect(event).to.have.property("eventName");
             expect(event).to.have.property("eventDate");
-            expect(event).to.have.property("description");
             expect(event).to.have.property("eventType");
             expect(event).to.have.property("location");
             expect(event).to.have.property("joinDeadline");

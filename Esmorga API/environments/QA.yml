@@ -7,38 +7,34 @@ variables:
   - name: passwordAdmin
     value: "{{password_admin}}"
   - name: eventId
-    value: 6a96bc96f623786cfe194413
+    value: 6aba7bf1a4c3c1717ccf5acc
   - name: eventDate
     value: 2028-09-26T16:00:00.000Z
   - name: joinDeadline
-    value: 2026-09-26T16:00:00.000Z
+    value: 2027-09-26T16:00:00.000Z
   - name: voteDeadline
-    value: 2026-09-26T16:00:00.000Z
+    value: 2028-09-26T16:00:00.000Z
   - name: pollId
-    value: ""
+    value: 6aba53a0a4c3c1717ccf2782
   - name: optionId1
-    value: ""
+    value: 6aba53a0a4c3c1717ccf2783
   - name: optionId2
-    value: ""
+    value: 6aba53a0a4c3c1717ccf2784
   - name: optionId3
-    value: ""
+    value: 6aba53a0a4c3c1717ccf2785
   - name: optionId4
-    value: ""
+    value: 6aba53a0a4c3c1717ccf2786
   - name: userFullName
-    value: Scottie Pippen
+    value: Magico Gonzalez
   - name: userFullName_admin
     value: Magico Gonzalez
   - name: userRole
-    value: USER
+    value: ADMIN
   - name: loggedUserEmail
-    value: esmorga.test.03@yopmail.com
-  - name: adminAccessToken
-    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FiIiwic2Vzc2lvbklkIjoiYTdlNDBkYTItMDA3YS00NWNmLTkwMDctYjM1YmY0ODBkNjNkIiwiaWF0IjoxNzg4NDI4Mzg0LCJleHAiOjE3ODg0Mjg5ODR9.iFYq3800H7cEfQOefNJWbejQNiIryu53wUT_CN5AszM
-  - name: adminRefreshToken
-    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FiIiwic2Vzc2lvbklkIjoiYTdlNDBkYTItMDA3YS00NWNmLTkwMDctYjM1YmY0ODBkNjNkIiwiaWQiOiJlMmE2NDAwOC1iZWE1LTQ4M2YtYjgzNS0zNzBlNGY3ZDA4MGQiLCJpYXQiOjE3ODg0MjgzODR9.w14p9NngyXwViGiyVUS2SLkAdLYa6YIsfaW8lRMBouE
+    value: esmorga.test.01@yopmail.com
   - name: password_delete_account
     value: SuperSecret1!
-  - name: accessToken
-    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FkIiwic2Vzc2lvbklkIjoiY2Y1YWRhZTUtZmIwMy00ZWQ3LTlkZDAtOTYxN2ZmNTE3MWU1IiwiaWF0IjoxNzg4NDI4MjY4LCJleHAiOjE3ODg0Mjg4Njh9.HprrFo_qTdkGQopyMuY7laAfgp46GFJYpLB6E5fKq10
-  - name: refreshToken
-    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FkIiwic2Vzc2lvbklkIjoiY2Y1YWRhZTUtZmIwMy00ZWQ3LTlkZDAtOTYxN2ZmNTE3MWU1IiwiaWQiOiIzNjk1MjA4NC1jNzQ0LTQ5MTEtYmQ5My1hMWFmYmY4YWRjOTUiLCJpYXQiOjE3ODg0MjgyNjh9.H-06j1nie-824KxKbecAhd_Txt0xaV919FQ-1lcwe6Y
+  - name: adminAccessToken
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FiIiwic2Vzc2lvbklkIjoiZjIwOGUyMGUtODM3Ni00ODEzLWE2NTgtYmRlYWQyMWQwY2JhIiwiaWF0IjoxNzkwODUwNzI2LCJleHAiOjE3OTA4NTEzMjZ9.oZbHN-Rp0IjbGKnKvHILuiU3qkyU5ORctUruCHJEiJc
+  - name: adminRefreshToken
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiNjY3MDFhMmUwOTNlYjFlNDdhYzBhM2FiIiwic2Vzc2lvbklkIjoiZjIwOGUyMGUtODM3Ni00ODEzLWE2NTgtYmRlYWQyMWQwY2JhIiwiaWQiOiI3MTE4MmU2Ni1kODhkLTQ1MGYtODc5MS1kNjM4Y2EzNDdmMjgiLCJpYXQiOjE3OTA4NTA3MjZ9.yW41eQ3zos-b5x-s9g3Lw20FcKH7BR7tcn39rynwIwk
