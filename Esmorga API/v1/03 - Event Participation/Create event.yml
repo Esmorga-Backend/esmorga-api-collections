@@ -1,21 +1,38 @@
 info:
-  name: Delete event
+  name: Create event
   type: http
-  seq: 6
+  seq: 2
 
 http:
-  method: DELETE
+  method: POST
   url: "{{baseUrl}}/v1/events"
   headers:
-    - name: Content-Type
-      value: application/json
     - name: Authorization
       value: Bearer {{accessToken}}
+      description: Bearer accessToken
+    - name: Content-Type
+      value: application/json
+      description: application/json
   body:
     type: json
     data: |-
       {
-          "eventId": "{{eventId}}"
+        "eventName": "Nuevo evento 2",
+        "eventDate": "{{eventDate}}",
+        "description": "Test the currentAttendeeCount",
+        "eventType": "Party",
+        "imageUrl": "image.url",
+        "location": {
+          "name": "Malos Hábitos",
+          "lat": 43.37041273508349,
+          "long": -8.400401990375894
+        },
+        "tags": [
+          "Dance",
+          "Music"
+        ],
+        "joinDeadline": "{{joinDeadline}}",
+        "maxCapacity": 12
       }
   auth: inherit
 
@@ -28,8 +45,8 @@ runtime:
 
         if (role === "ADMIN") {
 
-          test("Status code is 204 for ADMIN", function () {
-            expect(res.getStatus()).to.equal(204);
+          test("Status code is 201 for ADMIN", function () {
+            expect(res.getStatus()).to.equal(201);
           });
 
         } else if (role === "USER") {

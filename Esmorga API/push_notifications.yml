@@ -1,0 +1,49 @@
+info:
+  name: push_notifications
+  type: http
+  seq: 2
+
+http:
+  method: post
+  url: https://api.onesignal.com/notifications?c=push
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Key <ONESIGNAL_REST_API_KEY>
+  params:
+    - name: c
+      value: push
+      type: query
+  body:
+    type: json
+    data: |-
+      {
+        "app_id": "0115e97b-297b-4eec-bd1a-130fe1e6a960",
+        "headings": {
+          "en": "Fiesta en mi casa!!!"
+        },
+        "contents": {
+          "en": "Malos Hábitos"
+        },
+        "data": {
+          "eventDate": "2026-10-07T22:15:00.000Z"
+        },
+        "mutable_content": true,
+        "filters": [
+          {
+            "field": "tag",
+            "key": "environment",
+            "relation": "=",
+            "value": "qa"
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: false
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false

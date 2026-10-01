@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/v1/users?page=1&limit=2&sortBy=lastName&order=desc"
+  url: "{{baseUrl}}/v1/users?limit=2&order=desc"
   headers:
     - name: Authorization
       value: Bearer {{accessToken}}
@@ -13,14 +13,16 @@ http:
       value: application/json
   params:
     - name: page
-      value: "1"
+      value: "11"
       type: query
+      disabled: true
     - name: limit
       value: "2"
       type: query
     - name: sortBy
-      value: lastName
+      value: name
       type: query
+      disabled: true
     - name: sortBy
       value: lastName
       type: query
@@ -30,12 +32,12 @@ http:
       type: query
       disabled: true
     - name: order
-      value: desc
+      value: asc
       type: query
+      disabled: true
     - name: order
       value: desc
       type: query
-      disabled: true
   auth: inherit
 
 runtime:

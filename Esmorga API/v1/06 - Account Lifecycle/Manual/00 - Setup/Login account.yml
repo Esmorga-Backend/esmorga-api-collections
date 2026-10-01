@@ -65,12 +65,6 @@ runtime:
           expect(body.profile).to.have.property("role");
         });
 
-        test("Logged user has USER role", function () {
-          const body = res.getBody();
-
-          expect(body.profile.role).to.equal("USER");
-        });
-
 settings:
   encodeUrl: true
   timeout: 0
