@@ -32,6 +32,7 @@ jobs:
   bruno-user:
     name: Bruno - v1 collection (USER)
     runs-on: ubuntu-latest
+    environment: QA
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,10 +53,11 @@ jobs:
             -r \
             --env QA \
             --exclude-tags manual \
-            --env-var "user=${{ secrets.QA_USER_EMAIL }}" \
-            --env-var "password=${{ secrets.QA_USER_PASSWORD }}" \
-            --env-var "user_admin=${{ secrets.QA_ADMIN_EMAIL }}" \
-            --env-var "password_admin=${{ secrets.QA_ADMIN_PASSWORD }}" \
+            --env-var "user=${{ secrets.USER_EMAIL }}" \
+            --env-var "password=${{ secrets.USER_PASSWORD }}" \
+            --env-var "user_admin=${{ secrets.ADMIN_EMAIL }}" \
+            --env-var "password_admin=${{ secrets.ADMIN_PASSWORD }}" \
+            --env-var "ONESIGNAL_REST_API_KEY=${{ secrets.ONESIGNAL_REST_API_KEY }}" \
             --reporter-json "$RUNNER_TEMP/bruno-report-user.json" \
             --reporter-skip-body \
             --reporter-skip-headers Authorization
@@ -70,6 +72,7 @@ jobs:
   bruno-admin:
     name: Bruno - v1 collection (ADMIN)
     runs-on: ubuntu-latest
+    environment: QA
     needs: bruno-user
     # Always run so ADMIN executes even when the USER job failed.
     if: always()
@@ -91,10 +94,11 @@ jobs:
             -r \
             --env QA \
             --exclude-tags manual \
-            --env-var "user=${{ secrets.QA_ADMIN_EMAIL }}" \
-            --env-var "password=${{ secrets.QA_ADMIN_PASSWORD }}" \
-            --env-var "user_admin=${{ secrets.QA_ADMIN_EMAIL }}" \
-            --env-var "password_admin=${{ secrets.QA_ADMIN_PASSWORD }}" \
+            --env-var "user=${{ secrets.ADMIN_EMAIL }}" \
+            --env-var "password=${{ secrets.ADMIN_PASSWORD }}" \
+            --env-var "user_admin=${{ secrets.ADMIN_EMAIL }}" \
+            --env-var "password_admin=${{ secrets.ADMIN_PASSWORD }}" \
+            --env-var "ONESIGNAL_REST_API_KEY=${{ secrets.ONESIGNAL_REST_API_KEY }}" \
             --reporter-json "$RUNNER_TEMP/bruno-report-admin.json" \
             --reporter-skip-body \
             --reporter-skip-headers Authorization
