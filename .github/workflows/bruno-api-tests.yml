@@ -1,0 +1,136 @@
+name: Bruno API Tests
+
+# Issue #3: QA - BE - Integrate Bruno API tests with GitHub Actions
+#
+# Scope: run the complete "Esmorga API/v1" collection twice — once as USER,
+# once as ADMIN — against the QA environment, as a manual (workflow_dispatch)
+# run. No branch/tag/push triggers are wired up yet.
+#
+# Rules encoded here:
+#   * Single recursive collection run per role (no folder splitting, no parallelism).
+#   * Existing collection execution order preserved (Bruno recurses in order).
+#   * Requests tagged "manual" are excluded; everything else runs.
+#   * QA credentials are injected at runtime via --env-var from GitHub Secrets
+#     only. No credential values are committed or written to disk.
+#   * ADMIN always runs even if USER fails; the final-status job succeeds only
+#     if BOTH roles succeed.
+
+on:
+  workflow_dispatch: {}
+
+# Least privilege: we only ever read the checkout.
+permissions:
+  contents: read
+
+# Prevent overlapping QA runs. Do NOT cancel an in-progress run (a run in
+# progress must be allowed to finish before the next one is admitted).
+concurrency:
+  group: bruno-api-tests-qa
+  cancel-in-progress: false
+
+jobs:
+  bruno-user:
+    name: Bruno - v1 collection (USER)
+    runs-on: ubuntu-latest
+    environment: QA
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run full v1 collection as USER
+        # working-directory is set per-step (NOT at job level), pointing at the
+        # collection root. From here the collection is the current directory.
+        # The complete collection is run recursively (-r) in order, excluding
+        # only requests tagged "manual". QA credentials come from Secrets.
+        working-directory: Esmorga API
+        run: |
+          npx @usebruno/cli@4.2.0 run v1 \
+            -r \
+            --env QA \
+            --exclude-tags manual \
+            --env-var "user=${{ secrets.USER_EMAIL }}" \
+            --env-var "password=${{ secrets.USER_PASSWORD }}" \
+            --env-var "user_admin=${{ secrets.ADMIN_EMAIL }}" \
+            --env-var "password_admin=${{ secrets.ADMIN_PASSWORD }}" \
+            --env-var "ONESIGNAL_REST_API_KEY=${{ secrets.ONESIGNAL_REST_API_KEY }}" \
+            --reporter-json "$RUNNER_TEMP/bruno-report-user.json" \
+            --reporter-skip-body \
+            --reporter-skip-headers Authorization
+
+      - name: Upload USER report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bruno-report-user
+          path: ${{ runner.temp }}/bruno-report-user.json
+
+  bruno-admin:
+    name: Bruno - v1 collection (ADMIN)
+    runs-on: ubuntu-latest
+    environment: QA
+    needs: bruno-user
+    # Always run so ADMIN executes even when the USER job failed.
+    if: always()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run full v1 collection as ADMIN
+        # Same complete recursive run, but the login credentials now use the
+        # ADMIN identity (both the primary user/password and the admin pair).
+        working-directory: Esmorga API
+        run: |
+          npx @usebruno/cli@4.2.0 run v1 \
+            -r \
+            --env QA \
+            --exclude-tags manual \
+            --env-var "user=${{ secrets.ADMIN_EMAIL }}" \
+            --env-var "password=${{ secrets.ADMIN_PASSWORD }}" \
+            --env-var "user_admin=${{ secrets.ADMIN_EMAIL }}" \
+            --env-var "password_admin=${{ secrets.ADMIN_PASSWORD }}" \
+            --env-var "ONESIGNAL_REST_API_KEY=${{ secrets.ONESIGNAL_REST_API_KEY }}" \
+            --reporter-json "$RUNNER_TEMP/bruno-report-admin.json" \
+            --reporter-skip-body \
+            --reporter-skip-headers Authorization
+
+      - name: Upload ADMIN report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bruno-report-admin
+          path: ${{ runner.temp }}/bruno-report-admin.json
+
+  final-status:
+    name: Final status
+    runs-on: ubuntu-latest
+    needs:
+      - bruno-user
+      - bruno-admin
+    # Always evaluate; pass only if BOTH role jobs succeeded.
+    if: always()
+    steps:
+      - name: Assert both roles succeeded
+        # needs.<job>.result yields the final result of each job
+        # (success | failure | skipped | cancelled).
+        run: |
+          user_result="${{ needs.bruno-user.result }}"
+          admin_result="${{ needs.bruno-admin.result }}"
+          echo "::group::Final status summary"
+          echo "bruno-user  result = ${user_result}"
+          echo "bruno-admin result = ${admin_result}"
+          echo "::endgroup::"
+          if [ "$user_result" != "success" ] || [ "$admin_result" != "success" ]; then
+            echo "Workflow failed: both USER and ADMIN must succeed."
+            exit 1
+          fi
+          echo "Workflow passed: USER and ADMIN both succeeded."
