@@ -3,8 +3,9 @@ name: Bruno API Tests
 # Issue #3: QA - BE - Integrate Bruno API tests with GitHub Actions
 #
 # Scope: run the complete "Esmorga API/v1" collection twice — once as USER,
-# once as ADMIN — against the QA environment, as a manual (workflow_dispatch)
-# run. No branch/tag/push triggers are wired up yet.
+# once as ADMIN — against the QA environment. Runs are triggered manually
+# (workflow_dispatch) or on a daily schedule at 10:00 Europe/Madrid (issue #22;
+# scheduled runs execute the default branch, main, after merge).
 #
 # Rules encoded here:
 #   * Single recursive collection run per role (no folder splitting, no parallelism).
@@ -14,6 +15,9 @@ name: Bruno API Tests
 #     only. No credential values are committed or written to disk.
 #   * ADMIN always runs even if USER fails; the final-status job succeeds only
 #     if BOTH roles succeed.
+#   * A Slack notification is sent when the workflow STARTS (slack-start),
+#     independently and in parallel with the Bruno jobs: a failed Slack send
+#     neither blocks the tests nor fails the workflow.
 #   * A Slack notification is sent after BOTH roles and the final status are
 #     known, on success AND on failure. It shows the per-role results, the
 #     overall result, the environment, the triggering user and a direct link
@@ -23,7 +27,14 @@ name: Bruno API Tests
 #     of truth.
 
 on:
+  # Manual runs via workflow_dispatch, plus a daily schedule at 10:00 in
+  # Europe/Madrid. IANA timezones are resolved by GitHub Actions, so the DST
+  # spring-forward/summer-winter transitions are handled automatically.
+  # Scheduled runs execute the default branch (main) after this merges.
   workflow_dispatch: {}
+  schedule:
+    - cron: '0 10 * * *'
+      timezone: 'Europe/Madrid'
 
 # Least privilege: we only ever read the checkout.
 permissions:
@@ -36,6 +47,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  slack-start:
+    name: Slack notification (start)
+    runs-on: ubuntu-latest
+    environment: QA
+    # No "needs": it runs in parallel with the Bruno jobs, so a slow or
+    # failing Slack send never blocks the tests.
+    steps:
+      - name: Send Slack start notification
+        # continue-on-error: the workflow outcome is decided by the Bruno
+        # jobs and final-status, never by this notification.
+        continue-on-error: true
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          BRUNO_ENV: QA
+          ACTOR: ${{ github.actor }}
+          RUN_LINK: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL is not configured for the QA environment; skipping start notification."
+            exit 0
+          fi
+          PAYLOAD="$(python3 -c 'import json,os;t="\U0001f680 **Bruno API Tests \u00b7 "+os.environ["BRUNO_ENV"]+"** \u2014 Ejecuci\u00f3n iniciada.\n\nTriggered by: "+os.environ["ACTOR"]+"\nGitHub Actions: "+os.environ["RUN_LINK"];print(json.dumps({"text":t}))')"
+          curl -sS --fail --connect-timeout 10 --max-time 30 \
+            -X POST \
+            -H "Content-Type: application/json" \
+            --data "$PAYLOAD" \
+            "$SLACK_WEBHOOK_URL"
+
   bruno-user:
     name: Bruno - v1 collection (USER)
     runs-on: ubuntu-latest
